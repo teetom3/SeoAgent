@@ -19,6 +19,32 @@
         }
       }
     }
+    const loadingMessages = [
+  "L'IA réfléchit...",
+  "L'IA regarde et compare le web !",
+  "L'IA cherche les meilleurs mots clefs...",
+  "L'IA rédige le plan de l'article...",
+  "L'IA rédige l'article...",
+  "L'IA a bientôt fini !"
+];
+
+let loadingInterval;
+
+function startLoadingMessages() {
+  const loadingText = document.getElementById("loading-text");
+  let index = 0;
+
+  loadingText.innerText = loadingMessages[index];
+
+  loadingInterval = setInterval(() => {
+    index = (index + 1) % loadingMessages.length;
+    loadingText.innerText = loadingMessages[index];
+  }, 10000); // toutes les 2 secondes
+}
+
+function stopLoadingMessages() {
+  clearInterval(loadingInterval);
+}
   </script>
 </head>
 <body class="min-h-screen bg-cover bg-center text-white font-poppins flex flex-col items-center justify-center p-4 relative"
@@ -49,7 +75,7 @@
 
     <div id="loading" class="hidden text-center my-4">
       <div class="loader mx-auto w-10 h-10 border-4 border-white border-t-purple-400 rounded-full animate-spin"></div>
-      <p class="mt-2 text-sm">L'IA réfléchit...</p>
+      <p id="loading-text" class="mt-4 text-sm">L'IA réfléchit...</p>
     </div>
 
     <div class="relative mt-6">
@@ -74,7 +100,8 @@
   const input = document.getElementById("question").value.trim();
   const responseDiv = document.getElementById("response");
   const loadingDiv = document.getElementById("loading");
-
+  loadingDiv.classList.remove("hidden");
+  startLoadingMessages(); // démarrer les messages tournants
   responseDiv.innerText = "";
   loadingDiv.classList.remove("hidden");
 
@@ -101,7 +128,9 @@
   } catch (err) {
     responseDiv.innerText = "⚠️ Erreur lors de la génération de l'article : " + err.message;
   } finally {
+    
     loadingDiv.classList.add("hidden");
+stopLoadingMessages(); 
   }
 }
 
