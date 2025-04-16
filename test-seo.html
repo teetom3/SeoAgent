@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GoonsArticleGenerator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            poppins: ['Poppins', 'sans-serif']
+          },
+          backgroundImage: {
+            'gradient-startup': 'linear-gradient(to right, #00f0ff, #a700ff)',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen bg-gradient-startup text-white font-poppins flex flex-col items-center justify-center p-4 relative">
+  <div class="max-w-2xl w-full bg-white bg-opacity-10 backdrop-blur rounded-2xl shadow-xl p-8">
+    <h1 class="text-3xl font-bold mb-2 text-center text-white bg-clip-text text-transparent bg-gradient-to-r from-lime-400 to-violet-500">
+      GoonsArticleGenerator
+    </h1>
+    <p class="text-center text-sm text-white opacity-80 mb-6">Cela peut prendre 1 à 2 minutes, soyez patient 🕒</p>
+
+    <label class="block text-white text-lg mb-2 text-center">Tapez le titre de votre article SEO :</label>
+
+    <div class="flex gap-2 mb-4">
+      <input id="question" type="text" placeholder="Ex : Meilleur CRM pour TPE"
+             class="flex-grow px-4 py-2 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-purple-400" />
+      <button onclick="askQuestion()"
+              class="bg-white text-purple-700 font-bold px-6 py-2 rounded-lg hover:bg-purple-100 transition">Envoyer</button>
+    </div>
+
+    <div id="loading" class="hidden text-center my-4">
+      <div class="loader mx-auto w-10 h-10 border-4 border-white border-t-purple-400 rounded-full animate-spin"></div>
+      <p class="mt-2 text-sm">L'IA réfléchit...</p>
+    </div>
+
+    <div id="response" class="whitespace-pre-line mt-6 p-4 rounded-lg bg-white bg-opacity-20 text-white"></div>
+  </div>
+
+  <img src="footer_logo.png" alt="Goons logo" class="absolute bottom-4 right-4 w-28 opacity-80" />
+
+  <style>
+    .loader {
+      border-top-color: #a78bfa;
+    }
+  </style>
+
+  <script>
+    async function askQuestion() {
+      const input = document.getElementById("question").value;
+      const responseDiv = document.getElementById("response");
+      const loadingDiv = document.getElementById("loading");
+
+      responseDiv.innerText = "";
+      loadingDiv.classList.remove("hidden");
+
+      try {
+        const res = await fetch("http://localhost:5678/webhook/seo-agent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ chatInput: input })
+        });
+
+        const text = await res.text();
+        responseDiv.innerText = text;
+      } catch (err) {
+        responseDiv.innerText = "Erreur : " + err.message;
+      } finally {
+        loadingDiv.classList.add("hidden");
+      }
+    }
+  </script>
+</body>
+</html>
