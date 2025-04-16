@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GoonsArticleGenerator</title>
+  <title>ArticleGenerator</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <script>
@@ -21,11 +21,21 @@
     }
   </script>
 </head>
-<body class="min-h-screen bg-gradient-startup text-white font-poppins flex flex-col items-center justify-center p-4 relative">
-  <div class="max-w-2xl w-full bg-white bg-opacity-10 backdrop-blur rounded-2xl shadow-xl p-8">
+<body class="min-h-screen bg-cover bg-center text-white font-poppins flex flex-col items-center justify-center p-4 relative"
+      style="background-image: url('ChatGPT Image 16 avr. 2025, 15_30_36.png');">
+  <div class="absolute inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-0"></div>
+
+  <div class="relative z-10 max-w-2xl w-full bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-xl p-8">
     <h1 class="text-3xl font-bold mb-2 text-center text-white bg-clip-text text-transparent bg-gradient-to-r from-lime-400 to-violet-500">
-      GoonsArticleGenerator
+      ArticleGenerator
     </h1>
+    <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-4 mb-6 flex items-start gap-3 shadow">
+      <div class="text-lime-400 text-xl">📈</div>
+      <p class="text-white text-sm opacity-90">
+        Un article de blog bien optimisé pour le SEO permet d'améliorer la visibilité de votre site sur les moteurs de recherche,
+        d'attirer du trafic qualifié, et de renforcer votre autorité dans votre domaine. C’est un levier essentiel pour une stratégie digitale efficace 🚀
+      </p>
+    </div>
     <p class="text-center text-sm text-white opacity-80 mb-6">Cela peut prendre 1 à 2 minutes, soyez patient 🕒</p>
 
     <label class="block text-white text-lg mb-2 text-center">Tapez le titre de votre article SEO :</label>
@@ -34,7 +44,7 @@
       <input id="question" type="text" placeholder="Ex : Meilleur CRM pour TPE"
              class="flex-grow px-4 py-2 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-purple-400" />
       <button onclick="askQuestion()"
-              class="bg-white text-purple-700 font-bold px-6 py-2 rounded-lg hover:bg-purple-100 transition">Envoyer</button>
+              class="bg-white text-blue-950 font-bold px-6 py-2 rounded-lg hover:bg-purple-100 transition">Envoyer</button>
     </div>
 
     <div id="loading" class="hidden text-center my-4">
@@ -42,14 +52,20 @@
       <p class="mt-2 text-sm">L'IA réfléchit...</p>
     </div>
 
-    <div id="response" class="whitespace-pre-line mt-6 p-4 rounded-lg bg-white bg-opacity-20 text-white"></div>
+    <div class="relative mt-6">
+      <button onclick="copyResponse()" class="absolute top-2 right-2 text-xs bg-blue-950 hover:bg-purple-600 text-white px-3 py-1 rounded shadow">
+        Copier
+      </button>
+    
+      <div id="response" class="whitespace-pre-line p-4 rounded-lg bg-white bg-opacity-20 text-white min-h-[100px]"></div>
+    </div>
   </div>
 
   <img src="footer_logo.png" alt="Goons logo" class="absolute bottom-4 right-4 w-28 opacity-80" />
 
   <style>
     .loader {
-      border-top-color: #a78bfa;
+      border-top-color: #051789;
     }
   </style>
 
@@ -63,7 +79,7 @@
       loadingDiv.classList.remove("hidden");
 
       try {
-        const res = await fetch("http://localhost:5678/webhook/seo-agent", {
+        const res = await fetch("https://jdelacroix.app.n8n.cloud/webhook/seo-agent", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ chatInput: input })
@@ -77,6 +93,23 @@
         loadingDiv.classList.add("hidden");
       }
     }
+
+    function copyResponse() {
+  const text = document.getElementById("response").innerText;
+
+  if (!text) {
+    alert("Rien à copier !");
+    return;
+  }
+
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      alert("Texte copié dans le presse-papiers !");
+    })
+    .catch(err => {
+      alert("Erreur lors de la copie : " + err);
+    });
+}
   </script>
 </body>
 </html>
