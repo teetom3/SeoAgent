@@ -70,29 +70,41 @@
   </style>
 
   <script>
-    async function askQuestion() {
-      const input = document.getElementById("question").value;
-      const responseDiv = document.getElementById("response");
-      const loadingDiv = document.getElementById("loading");
+ async function askQuestion() {
+  const input = document.getElementById("question").value.trim();
+  const responseDiv = document.getElementById("response");
+  const loadingDiv = document.getElementById("loading");
 
-      responseDiv.innerText = "";
-      loadingDiv.classList.remove("hidden");
+  responseDiv.innerText = "";
+  loadingDiv.classList.remove("hidden");
 
-      try {
-        const res = await fetch("https://jdelacroix.app.n8n.cloud/webhook/seo-agent", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ chatInput: input })
-        });
+  if (!input) {
+    loadingDiv.classList.add("hidden");
+    responseDiv.innerText = "Veuillez entrer un titre d'article avant de continuer.";
+    return;
+  }
 
-        const text = await res.text();
-        responseDiv.innerText = text;
-      } catch (err) {
-        responseDiv.innerText = "Erreur : " + err.message;
-      } finally {
-        loadingDiv.classList.add("hidden");
-      }
+  try {
+    const res = await fetch("https://jdelacroix.app.n8n.cloud/webhook/seo-agent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chatInput: input })
+    });
+
+    const text = await res.text();
+
+    if (!text || text.trim().length < 20) {
+      responseDiv.innerText = "❌ Le titre fourni ne semble pas approprié. Veuillez reformuler votre demande.";
+    } else {
+      responseDiv.innerText = text;
     }
+  } catch (err) {
+    responseDiv.innerText = "⚠️ Erreur lors de la génération de l'article : " + err.message;
+  } finally {
+    loadingDiv.classList.add("hidden");
+  }
+}
+
 
     function copyResponse() {
   const text = document.getElementById("response").innerText;
