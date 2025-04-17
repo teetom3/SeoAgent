@@ -114,7 +114,6 @@ function stopLoadingMessages() {
   try {
     const res = await fetch("https://jdelacroix.app.n8n.cloud/webhook/seo-agent", {
       method: "POST",
-      mode : 'no-cors',
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ chatInput: input })
     });
